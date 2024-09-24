@@ -76,7 +76,11 @@ jobs:
             libboost-all-dev \
             g++-aarch64-linux-gnu \
             libc6-dev-arm64-cross \
-            gcc-aarch64-linux-gnu
+            gcc-aarch64-linux-gnu \
+            python3-pip
+
+          pip3 install ziglang
+          [[ -f ~/.cargo/bin/cargo-zigbuild ]] || cargo install cargo-zigbuild
 
           aarch64-linux-gnu-gcc --version
           aarch64-linux-gnu-g++ --version
@@ -86,17 +90,17 @@ jobs:
           rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
 
       - run: |
-          cargo build -r --target ${{ matrix.target }}
+          cargo zigbuild -r --target ${{ matrix.target }}
           file ./target/${{ matrix.target }}/release/sold
           cd target/${{ matrix.target }}/release
           tar czvf sold-${{ matrix.target }}.tar.gz sold
-        env:
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
-          CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
-          CC: aarch64-linux-gnu-gcc
-          CXX: aarch64-linux-gnu-g++
-          RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"
+        # env:
+        #   CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+        #   CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+        #   CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
+        #   CC: aarch64-linux-gnu-gcc
+        #   CXX: aarch64-linux-gnu-g++
+        #   RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"
 
       - name: Publish
         uses: softprops/action-gh-release@v1

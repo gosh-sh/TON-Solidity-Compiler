@@ -71,8 +71,7 @@ jobs:
           sudo apt update
           sudo apt install -y \
             build-essential \
-            llvm \
-            clang \
+            binutils-multiarch \
             cmake \
             g++-aarch64-linux-gnu \
             libc6-dev-arm64-cross \
@@ -88,17 +87,19 @@ jobs:
           cd boost_1_81_0
           ./bootstrap.sh --with-toolset=clang
           # sudo ./b2 toolset=clang cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" --prefix=/usr/local install
-          sudo ./b2 link=static install --prefix=/usr/local
+          sudo ./b2 toolset=gcc-arm link=static install --prefix=/usr/local
 
-          # aarch64-linux-gnu-gcc --version
-          # aarch64-linux-gnu-g++ --version
+          aarch64-linux-gnu-gcc --version
+          aarch64-linux-gnu-g++ --version
 
           file $(which rustup)  # for debug
           rustup target add aarch64-unknown-linux-gnu
           rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
         env:
-          CC: clang
-          CXX: clang++
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+          CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
+          RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"
 
       - run: |
           export BOOST_ROOT=/usr/local
@@ -110,10 +111,8 @@ jobs:
           tar czvf sold-${{ matrix.target }}.tar.gz sold
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-          # CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
-          # CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
-          CC: clang
-          CXX: clang++
+          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+          CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
           RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"
 
       - name: Publish

@@ -85,7 +85,7 @@ jobs:
           wget https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.bz2
           tar --bzip2 -xf boost_1_81_0.tar.bz2
           cd boost_1_81_0
-          ./bootstrap.sh --with-toolset=clang
+          ./bootstrap.sh --with-toolset=gcc-arm
           # sudo ./b2 toolset=clang cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" --prefix=/usr/local install
           sudo ./b2 toolset=gcc-arm link=static install --prefix=/usr/local
 

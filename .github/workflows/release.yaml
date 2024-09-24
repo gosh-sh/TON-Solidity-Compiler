@@ -69,8 +69,7 @@ jobs:
 
       - run: |
           sudo apt update
-          sudo apt install -y build-essential libboost-all-dev
-          apt-get install -y \
+          sudo apt install -y build-essential libboost-all-dev \
             g++-x86-64-linux-gnu \
             libc6-dev-amd64-cross \
             g++-aarch64-linux-gnu \
@@ -85,9 +84,6 @@ jobs:
           cd target/${{ matrix.target }}/release
           tar czvf sold-${{ matrix.target }}.tar.gz sold
         env:
-          CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: x86_64-linux-gnu-gcc
-          CC_x86_64_unknown_linux_gnu: x86_64-linux-gnu-gcc
-          CXX_x86_64_unknown_linux_gnu: x86_64-linux-gnu-g++
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
           CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
           CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++

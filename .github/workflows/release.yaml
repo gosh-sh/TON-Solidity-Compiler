@@ -75,7 +75,8 @@ jobs:
             cmake \
             g++-aarch64-linux-gnu \
             libc6-dev-arm64-cross \
-            gcc-aarch64-linux-gnu
+            gcc-aarch64-linux-gnu \
+            libboost-filesystem-dev
 
             # python3-pip
 
@@ -85,8 +86,8 @@ jobs:
           wget https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.bz2
           tar --bzip2 -xf boost_1_81_0.tar.bz2
           cd boost_1_81_0
-          ./bootstrap.sh
-          sudo ./b2 link=static install --prefix=/usr/local
+          ./bootstrap.sh --prefix=/usr --with-libraries=filesystem toolset=gcc architecture=arm
+          sudo ./b2 link=static install --with-filesystem
 
           aarch64-linux-gnu-gcc --version
           aarch64-linux-gnu-g++ --version

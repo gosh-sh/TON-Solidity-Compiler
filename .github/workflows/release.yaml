@@ -87,7 +87,7 @@ jobs:
           tar --bzip2 -xf boost_1_81_0.tar.bz2
           cd boost_1_81_0
           ./bootstrap.sh --with-toolset=clang
-          ./b2 toolset=clang cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" --prefix=/usr/local install
+          sudo ./b2 toolset=clang cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" --prefix=/usr/local install
           # ./b2 link=static install --prefix=/usr/local
 
           # aarch64-linux-gnu-gcc --version
@@ -96,6 +96,9 @@ jobs:
           file $(which rustup)  # for debug
           rustup target add aarch64-unknown-linux-gnu
           rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
+        env:
+          CC: clang
+          CXX: clang++
 
       - run: |
           export BOOST_ROOT=/usr/local
@@ -106,9 +109,9 @@ jobs:
           cd target/${{ matrix.target }}/release
           tar czvf sold-${{ matrix.target }}.tar.gz sold
         env:
-        #   CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-        #   CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
-        #   CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          # CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+          # CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
           CC: clang
           CXX: clang++
           RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"

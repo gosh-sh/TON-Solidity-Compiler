@@ -96,7 +96,7 @@ jobs:
           tar xfz boost_1_81_0.tar.gz
           cd boost_1_81_0
           ./bootstrap.sh --with-libraries=filesystem
-          ./b2 architecture=arm address-model=64 -s NO_LZMA=1 -s NO_ZSTD=1 abi=aapcs install
+          sudo ./b2 architecture=arm address-model=64 -s NO_LZMA=1 -s NO_ZSTD=1 abi=aapcs install
           lipo /usr/local/lib/libboost_*.dylib -info
         env:
           CC: aarch64-linux-gnu-gcc

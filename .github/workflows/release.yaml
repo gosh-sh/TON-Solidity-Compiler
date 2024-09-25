@@ -75,26 +75,20 @@ jobs:
             cmake \
             g++-aarch64-linux-gnu \
             libc6-dev-arm64-cross \
-            gcc-aarch64-linux-gnu \
-            libboost-filesystem-dev
+            gcc-aarch64-linux-gnu
 
-            # python3-pip
-
-          # pip3 install ziglang
-          # [[ -f ~/.cargo/bin/cargo-zigbuild ]] || cargo install cargo-zigbuild
-
-          wget https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.bz2
-          tar --bzip2 -xf boost_1_81_0.tar.bz2
-          cd boost_1_81_0
-          ./bootstrap.sh --prefix=/usr --with-libraries=filesystem toolset=gcc architecture=arm
-          sudo ./b2 link=static install --with-filesystem
+          # wget https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.bz2
+          # tar --bzip2 -xf boost_1_81_0.tar.bz2
+          # cd boost_1_81_0
+          # ./bootstrap.sh --prefix=/usr --with-libraries=filesystem toolset=gcc architecture=arm
+          # sudo ./b2 link=static install --with-filesystem
 
           aarch64-linux-gnu-gcc --version
           aarch64-linux-gnu-g++ --version
 
-          file $(which rustup)  # for debug
-          rustup target add aarch64-unknown-linux-gnu
-          rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
+          # file $(which rustup)  # for debug
+          # rustup target add aarch64-unknown-linux-gnu
+          # rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
           CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
@@ -102,6 +96,15 @@ jobs:
           RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"
           CC: aarch64-linux-gnu-gcc
           CXX: aarch64-linux-gnu-g++
+
+      - name: Boost
+        run: |
+          curl -O -L https://boostorg.jfrog.io/artifactory/main/release/1.81.0/source/boost_1_81_0.tar.gz
+          tar xfz boost_1_81_0.tar.gz
+          cd boost_1_81_0
+          ./bootstrap.sh --with-libraries=filesystem
+          ./b2 architecture=arm address-model=64 -s NO_LZMA=1 -s NO_ZSTD=1 abi=aapcs install
+          lipo /usr/local/lib/libboost_*.dylib -info
 
       - run: |
           export BOOST_ROOT=/usr/local

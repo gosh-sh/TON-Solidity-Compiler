@@ -102,10 +102,10 @@ jobs:
           CXX: aarch64-linux-gnu-g++
 
       - run: |
-          export BOOST_ROOT=/usr/local
-          export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
-          export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-          cargo build -r --target ${{ matrix.target }}
+          # export BOOST_ROOT=/usr/local
+          # export LIBRARY_PATH=/usr/local/lib:$LIBRARY_PATH
+          # export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+          RUSTFLAGS="-L /usr/local/lib" cargo build -r --target ${{ matrix.target }}
           file ./target/${{ matrix.target }}/release/sold
           cd target/${{ matrix.target }}/release
           tar czvf sold-${{ matrix.target }}.tar.gz sold

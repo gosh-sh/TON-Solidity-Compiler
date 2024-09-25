@@ -89,13 +89,6 @@ jobs:
           # file $(which rustup)  # for debug
           # rustup target add aarch64-unknown-linux-gnu
           # rustup toolchain install --force-non-host stable-aarch64-unknown-linux-gnu
-        env:
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
-          CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
-          RUSTFLAGS: "-C linker=aarch64-linux-gnu-gcc"
-          CC: aarch64-linux-gnu-gcc
-          CXX: aarch64-linux-gnu-g++
 
       - name: Boost
         run: |
@@ -105,6 +98,9 @@ jobs:
           ./bootstrap.sh --with-libraries=filesystem
           ./b2 architecture=arm address-model=64 -s NO_LZMA=1 -s NO_ZSTD=1 abi=aapcs install
           lipo /usr/local/lib/libboost_*.dylib -info
+        env:
+          CC: aarch64-linux-gnu-gcc
+          CXX: aarch64-linux-gnu-g++
 
       - run: |
           export BOOST_ROOT=/usr/local
